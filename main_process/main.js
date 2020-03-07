@@ -1,4 +1,5 @@
 const { app, BrowserWindow } = require('electron')
+let sftp = require("./sftp-manager");
 
 function createWindow () {
   // Create the browser window.
@@ -11,7 +12,7 @@ function createWindow () {
   })
 
   // and load the index.html of the app.
-  win.loadFile('index.html')
+  win.loadFile('./src/file-explorer.html')
 
   // Open the DevTools.
   win.webContents.openDevTools()
@@ -20,14 +21,20 @@ function createWindow () {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(createWindow)
+app.whenReady().then(async() => {
+  global.SFTP = await sftp.init();
+  createWindow();
+});
 
 // Quit when all windows are closed.
-app.on('window-all-closed', () => {
+app.on('window-all-closed', async() => {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
-    app.quit()
+    if(await sftp.end())
+      app.quit()
+    else
+      console.log("Cannot close connection");
   }
 })
 
