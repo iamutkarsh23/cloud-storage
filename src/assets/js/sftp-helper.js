@@ -1,6 +1,6 @@
 let remote = require("electron").remote;
 
-let getDirList = (path) => {
+let getDirList = (path)=>{
    return remote.getGlobal('SFTP').list(path);
 };
 
