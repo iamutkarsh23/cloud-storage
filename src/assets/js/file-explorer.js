@@ -21,9 +21,9 @@ let activateFind = (()=>{
 let render = async (dirList)=>{
    let folders = parsingHelper.getFolders(dirList);
    let files = parsingHelper.getFiles(dirList);
-   // let foldersHTML = await parsingHelper.renderFoldersHTML(files);
+   let foldersHTML = await parsingHelper.renderFoldersHTML(folders);
    let filesHTML = await parsingHelper.renderFilesHTML(files);
-   // fileList.append(foldersHTML);
+   fileList.append(foldersHTML);
    fileList.append(filesHTML);
 
    console.log("Folders on Server: ", folders);

@@ -35,7 +35,7 @@ let getFiles = (data)=>{
 
 let renderFilesHTML = async (files)=>{
    let html = "";
-   let cwd = await sftpHelper.getCWD()
+   let cwd = sftpHelper.getCWD()
 
    if(files.length) {
       files.forEach((file) =>{
@@ -54,6 +54,53 @@ let renderFilesHTML = async (files)=>{
    return html;
 }
 
+
+let getLengthOfFolder = async (folderPath) => {
+   let folderContents = await sftpHelper.getDirList(folderPath);
+   return folderContents.length;
+}
+
+
+let renderFoldersHTML = async (folders) => {
+   let folderHTML = ``;
+   let folderPath = sftpHelper.getCWD();
+
+   if(folders.length){
+
+      for(const folder of folders){
+         const folderName = escapeHTML(folder.name);
+         folderPath = folderPath.concat('/',folderName); 
+         let folderLength = await getLengthOfFolder(folderPath); 
+         let folderIcon = '<span class="icon folder"></span>';
+
+         if(folderLength){
+            folderIcon = '<span class="icon folder full"></span>';
+         }
+
+         if(folderLength == 1){
+            folderLength += ' item';
+         }
+         else if(folderLength > 1){
+            folderLength += ' items';
+         }
+         else {
+            folderLength = 'Empty';
+         }
+         folderHTML = folderHTML + `<li class="folders">
+                                       <a href="${folderPath}" title="${folderPath}" class="folders">
+                                          ${folderIcon}
+                                          <span class="name">${folderName}</span> 
+                                          <span class="details">${folderLength}</span>
+                                       </a>
+                                    </li>`;
+         folderPath = sftpHelper.getCWD();
+
+      }
+   }
+   return folderHTML;
+}
+
+
 //Below are the helper functions for above method
 let escapeHTML = (text)=>{
    return text.replace(/\&/g,'&amp;').replace(/\</g,'&lt;').replace(/\>/g,'&gt;');
@@ -69,5 +116,6 @@ let bytesToSize = (bytes)=>{
 module.exports = {
    getFolders: getFolders,
    getFiles: getFiles,
+   renderFoldersHTML: renderFoldersHTML,
    renderFilesHTML: renderFilesHTML
 };

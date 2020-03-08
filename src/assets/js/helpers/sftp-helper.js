@@ -1,11 +1,17 @@
 let remote = require("electron").remote;
 
+cwd = [];
+
 let getDirList = (path)=>{
    return remote.getGlobal('SFTP').list(path);
 };
 
 let getCWD = ()=>{
-   return remote.getGlobal('SFTP').cwd();
+   let path = "./Server";
+   cwd.forEach((dirName) => {
+      path = path.concat('/',dirName);
+   })
+   return path;
 }
 
 module.exports = {
