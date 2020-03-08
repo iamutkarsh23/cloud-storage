@@ -87,7 +87,7 @@ let renderFoldersHTML = async (folders) => {
             folderLength = 'Empty';
          }
          folderHTML = folderHTML + `<li class="folders">
-                                       <a href="${folderPath}" title="${folderPath}" class="folders">
+                                       <a name="${folderName}" title="${folderPath}" class="folders">
                                           ${folderIcon}
                                           <span class="name">${folderName}</span> 
                                           <span class="details">${folderLength}</span>

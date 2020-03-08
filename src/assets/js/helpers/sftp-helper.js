@@ -1,22 +1,37 @@
 let remote = require("electron").remote;
 
-cwd = [];
+let cwd = [];
 
 let getDirList = (path)=>{
    return remote.getGlobal('SFTP').list(path);
 };
 
+let addFolderToCWD = (folderName)=>{
+   cwd.push(folderName);
+};
+
+let removeFolderFromCWD = ()=>{
+   cwd.pop();
+};
+
 let getCWD = ()=>{
-   let path = "./Server";
+   var path = ".";
    cwd.forEach((dirName) => {
       path = path.concat('/',dirName);
    })
    return path;
-}
+};
+
+let getCWDasArray = ()=>{
+   return cwd;
+};
 
 module.exports = {
    getDirList: getDirList,
-   getCWD: getCWD
+   addFolderToCWD: addFolderToCWD,
+   removeFolderFromCWD: removeFolderFromCWD,
+   getCWD: getCWD,
+   getCWDasArray: getCWDasArray
 };
 
 /* SFTP File JSON

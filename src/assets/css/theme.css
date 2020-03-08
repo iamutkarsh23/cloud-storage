@@ -71,6 +71,10 @@ body {
 	line-height: 20px;
 }
 
+.breadCrumbsClick {
+	cursor: pointer;
+}
+
 
 /*-------------------------
 	Search box
