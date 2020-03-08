@@ -18,7 +18,7 @@ let activateFind = (()=>{
    });
 });
 
-let render = async (dirList)=>{
+let renderDirectories = async (dirList)=>{
    let folders = parsingHelper.getFolders(dirList);
    let files = parsingHelper.getFiles(dirList);
    let foldersHTML = await parsingHelper.renderFoldersHTML(folders);
@@ -38,6 +38,14 @@ $(async ()=>{
    breadcrumbs.text('').append('<a href="sgdsg"><span class="folderName">ertherth</span></a> <span class="arrow">→</span> ');
    
    let dirList = await sftpHelper.getDirList('./Server');
-   await render(dirList);
+   await renderDirectories(dirList);
+
+   fileList.on('click', 'li.folders',async(e)=> {
+      e.preventDefault(); 
+      $(".data").empty();
+      $(".data").addClass("animated");
+      let newDirList = await sftpHelper.getDirList(e.target.title);
+      await renderDirectories(newDirList);
+   })
 
 });
