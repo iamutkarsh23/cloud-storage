@@ -4,8 +4,13 @@ let getDirList = (path)=>{
    return remote.getGlobal('SFTP').list(path);
 };
 
+let getCWD = ()=>{
+   return remote.getGlobal('SFTP').cwd();
+}
+
 module.exports = {
-   getDirList: getDirList
+   getDirList: getDirList,
+   getCWD: getCWD
 };
 
 /* SFTP File JSON

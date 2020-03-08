@@ -6,14 +6,38 @@ var   filemanager = $('.filemanager'),
       breadcrumbs = $('.breadcrumbs'),
       fileList = filemanager.find('.data');
 
-$(async ()=>{
-   breadcrumbs.text('').append('<a href="sgdsg"><span class="folderName">ertherth</span></a> <span class="arrow">→</span> ');
+// Hiding and showing the search box
+let activateFind = (()=>{
+   filemanager.find('.search').click(()=>{
+
+      var search = $(this);
+
+      search.find('span').hide();
+      search.find('input[type=search]').show().focus();
+
+   });
+});
+
+let render = async (dirList)=>{
+   let folders = parsingHelper.getFolders(dirList);
+   let files = parsingHelper.getFiles(dirList);
+   // let foldersHTML = await parsingHelper.renderFoldersHTML(files);
+   let filesHTML = await parsingHelper.renderFilesHTML(files);
+   // fileList.append(foldersHTML);
+   fileList.append(filesHTML);
+
+   console.log("Folders on Server: ", folders);
+   console.log("Files on Server: ", files);
+
+   activateFind();
    // Show the generated elements
    fileList.animate({'display':'inline-block'});
+};
 
-   var file = $('<li class="files"><a href="ssd" title="1" class="files"><span class="icon file f-docx">.docx</span><span class="name">note</span> <span class="details">23Kb</span></a></li>');
-   file.appendTo(fileList);
-   var temp = await sftpHelper.getDirList('./');
-   console.log("Folders on Server: ", parsingHelper.getFolders(temp));
-   console.log("Files on Server: ", parsingHelper.getFiles(temp));
+$(async ()=>{
+   breadcrumbs.text('').append('<a href="sgdsg"><span class="folderName">ertherth</span></a> <span class="arrow">→</span> ');
+   
+   let dirList = await sftpHelper.getDirList('./Server');
+   await render(dirList);
+
 });
