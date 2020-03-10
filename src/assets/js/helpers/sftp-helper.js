@@ -26,12 +26,19 @@ let getCWDasArray = ()=>{
    return cwd;
 };
 
+let changeCWD = (newCWD)=>{
+   let newCWDToArray = newCWD.split('/');
+   newCWDToArray.splice(0, 1);
+   cwd = newCWDToArray;
+};
+
 module.exports = {
    getDirList: getDirList,
    addFolderToCWD: addFolderToCWD,
    removeFolderFromCWD: removeFolderFromCWD,
    getCWD: getCWD,
-   getCWDasArray: getCWDasArray
+   getCWDasArray: getCWDasArray,
+   changeCWD: changeCWD
 };
 
 /* SFTP File JSON

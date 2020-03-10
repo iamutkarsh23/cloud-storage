@@ -35,71 +35,81 @@ let getFiles = (data)=>{
 
 let renderFilesHTML = async (files)=>{
    let html = "";
-   let cwd = sftpHelper.getCWD()
+   let filePath = sftpHelper.getCWD();
 
    if(files.length) {
       files.forEach((file) =>{
-         const name = escapeHTML(file.name),
-               fileSize = bytesToSize(file.size),
-               path = cwd.concat('/', name);
-         let   fileType = name.split('.'),
-               icon = '<span class="icon file></span>';
-         fileType = fileType[fileType.length-1];
-
-         icon = '<span class="icon file f-'+fileType+'">.'+fileType+'</span>';
-         const fileHTML = '<li class="files"><a href="'+ path+'" title="'+ path +'" class="files">'+icon+'<span class="name">'+ name +'</span> <span class="details">'+fileSize+'</span></a></li>';
-         html = html.concat(fileHTML);
+         html = html+getFileHTML(file, filePath, true);
       })
    }  
    return html;
 }
 
+let getFileHTML = (file, filePath, addFileNameToPath)=>{
+   const name = escapeHTML(file.name),
+         fileSize = bytesToSize(file.size),
+         path = (addFileNameToPath) ? filePath.concat('/', name) : filePath;
+   let   fileType = name.split('.'),
+         icon = '<span class="icon file></span>';
+   fileType = fileType[fileType.length-1];
+
+   icon = '<span class="icon file f-'+fileType+'">.'+fileType+'</span>';
+   const fileHTML = '<li class="files"><a href="'+ path+'" title="'+ path +'" class="files">'+icon+'<span class="name">'+ name +'</span> <span class="details">'+fileSize+'</span></a></li>';
+   return fileHTML;
+};
 
 let getLengthOfFolder = async (folderPath) => {
    let folderContents = await sftpHelper.getDirList(folderPath);
    return folderContents.length;
-}
+};
 
-
-let renderFoldersHTML = async (folders) => {
+let renderFoldersHTML = async (folders, path='') => {
    let folderHTML = ``;
-   let folderPath = sftpHelper.getCWD();
+   let folderPath;
+   if(path == '')
+      folderPath = sftpHelper.getCWD();
+   else
+      folderPath = path;
 
    if(folders.length){
 
       for(const folder of folders){
-         const folderName = escapeHTML(folder.name);
-         folderPath = folderPath.concat('/',folderName); 
-         let folderLength = await getLengthOfFolder(folderPath); 
-         let folderIcon = '<span class="icon folder"></span>';
-
-         if(folderLength){
-            folderIcon = '<span class="icon folder full"></span>';
-         }
-
-         if(folderLength == 1){
-            folderLength += ' item';
-         }
-         else if(folderLength > 1){
-            folderLength += ' items';
-         }
-         else {
-            folderLength = 'Empty';
-         }
-         folderHTML = folderHTML + `<li class="folders">
-                                       <a name="${folderName}" title="${folderPath}" class="folders">
-                                          ${folderIcon}
-                                          <span class="name">${folderName}</span> 
-                                          <span class="details">${folderLength}</span>
-                                       </a>
-                                    </li>`;
+         folderHTML = folderHTML + await getFolderHTML(folder, folderPath, true);
          folderPath = sftpHelper.getCWD();
-
       }
    }
    return folderHTML;
-}
+};
 
+let getFolderHTML = async(folder, folderPath, addFolderNameToPath)=>{
+   const folderName = escapeHTML(folder.name);
+   if(addFolderNameToPath)
+      folderPath = folderPath.concat('/',folderName); 
+   let folderLength = await getLengthOfFolder(folderPath); 
+   let folderIcon = '<span class="icon folder"></span>';
+
+   if(folderLength){
+      folderIcon = '<span class="icon folder full"></span>';
+   }
+
+   if(folderLength == 1){
+      folderLength += ' item';
+   }
+   else if(folderLength > 1){
+      folderLength += ' items';
+   }
+   else {
+      folderLength = 'Empty';
+   }
+   let folderHTML = `<li class="folders">
+                                 <a name="${folderName}" title="${folderPath}" class="folders">
+                                    ${folderIcon}
+                                    <span class="name">${folderName}</span> 
+                                    <span class="details">${folderLength}</span>
+                                 </a>
+                              </li>`;
+   return folderHTML;
+};
 
 //Below are the helper functions for above method
 let escapeHTML = (text)=>{
@@ -117,5 +127,7 @@ module.exports = {
    getFolders: getFolders,
    getFiles: getFiles,
    renderFoldersHTML: renderFoldersHTML,
-   renderFilesHTML: renderFilesHTML
+   getFolderHTML: getFolderHTML,
+   renderFilesHTML: renderFilesHTML,
+   getFileHTML: getFileHTML
 };
