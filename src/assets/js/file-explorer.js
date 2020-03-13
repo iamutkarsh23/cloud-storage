@@ -48,18 +48,15 @@ let activateFind = ()=>{
    // Listening for keyboard input on the search field.
    // We are using the "input" event which detects cut and paste
    // in addition to keyboard input.
-   let storedCWD = '';
+   
    filemanager.find('input').on('input', async(e)=>{
-      folders = [];
-      files = [];
+      let indexOfAliasCWD, aliasCWD;
       var phrase = e.currentTarget.value.trim().toLowerCase();
       if(phrase.length) {
-         if(storedCWD.length == 0)
-            storedCWD = sftpHelper.getCWD();
-         
-         let dirList = await sftpHelper.getDirList(storedCWD);
-         let searchResult = await search(dirList, phrase);
-         sftpHelper.changeCWD(storedCWD);
+         indexOfAliasCWD = sftpHelper.getIndexOfAliasCWD();
+         aliasCWD = sftpHelper.getAliasCWD(indexOfAliasCWD);
+         let dirList = await sftpHelper.getDirList(aliasCWD);
+         let searchResult = await search(dirList, phrase, indexOfAliasCWD);
          fileList.empty();
 			if(!searchResult.files.length && !searchResult.folders.length) {
             fileList.hide();
@@ -71,15 +68,13 @@ let activateFind = ()=>{
             renderSearchResult(searchResult);
 			}
       } else {
-         if(storedCWD.length != 0){
-            fileList.removeClass('animated');
-            fileList.empty();
-            let dirList = await sftpHelper.getDirList(storedCWD);
-            sftpHelper.changeCWD(storedCWD);
-            await renderDirectories(dirList);
-            fileList.addClass('animated');
-            storedCWD = '';
-         }
+         fileList.removeClass('animated');
+         fileList.empty();
+         sftpHelper.emptyAliasCWD();
+         let cwd = sftpHelper.getCWD();
+         let dirList = await sftpHelper.getDirList(cwd);
+         await renderDirectories(dirList);
+         fileList.addClass('animated');
       }
    }).on('keyup', function(e){
       // Clicking 'ESC' button triggers focusout and cancels the search
@@ -108,24 +103,24 @@ async function asyncForEach(array, callback) {
 
 let searchResultFolders = [];
 let searchResultFiles = [];
-let search = async (dirList, phrase)=>{
+let search = async (dirList, phrase, indexOfAliasCWD)=>{
    searchResultFolders = [];
    searchResultFiles = [];
-   let response = await searchHelper(dirList, phrase);
+   let response = await searchHelper(dirList, phrase, indexOfAliasCWD);
    searchResultFolders = [];
    searchResultFiles = [];
    return response;
 };
 
-let searchHelper = async(dirList, phrase)=> {
+let searchHelper = async(dirList, phrase, indexOfAliasCWD)=> {
    if(Array.isArray(dirList)) {
-      let cwd = sftpHelper.getCWD();
+      let cwd = sftpHelper.getAliasCWD(indexOfAliasCWD);
       await asyncForEach(dirList, async (item, index) => {
          if (item.type === 'd') {
-            sftpHelper.addFolderToCWD(item.name);
-            let nextCWD = sftpHelper.getCWD();
+            sftpHelper.addFolderToAliasCWD(item.name, indexOfAliasCWD);
+            let nextCWD = sftpHelper.getAliasCWD(indexOfAliasCWD);
             let nextDirList = await sftpHelper.getDirList(nextCWD);
-            await searchHelper(nextDirList, phrase);
+            await searchHelper(nextDirList, phrase, indexOfAliasCWD);
             if(item.name.toLowerCase().includes(phrase)){
                searchResultFolders.push({
                   path: nextCWD,
@@ -141,10 +136,12 @@ let searchHelper = async(dirList, phrase)=> {
             }
          }
          if(index == dirList.length-1){
-            sftpHelper.removeFolderFromCWD();
+            sftpHelper.removeFolderFromAliasCWD(indexOfAliasCWD);
          }
       })
       
+      
+      let temp = sftpHelper.getCWD();
       return {folders: searchResultFolders, files: searchResultFiles};
    } else {
       console.warn("Given data to getFiles function is not array, therefore it is not supported");

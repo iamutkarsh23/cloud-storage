@@ -1,6 +1,7 @@
 let remote = require("electron").remote;
 
 let cwd = [];
+let aliasCWD = [];
 
 let getDirList = (path)=>{
    return remote.getGlobal('SFTP').list(path);
@@ -32,13 +33,44 @@ let changeCWD = (newCWD)=>{
    cwd = newCWDToArray;
 };
 
+let getIndexOfAliasCWD = ()=>{
+   let newAlias = [];
+   newAlias = cwd.map((x)=>x);
+   return (aliasCWD.push(newAlias)-1);
+};
+
+let getAliasCWD = (index)=>{
+   var path = ".";
+   aliasCWD[index].forEach((dirName) => {
+      path = path.concat('/',dirName);
+   })
+   return path;
+};
+
+let addFolderToAliasCWD = (folderName, index)=>{
+   aliasCWD[index].push(folderName);
+};
+
+let removeFolderFromAliasCWD = (index)=>{
+   aliasCWD[index].pop();
+};
+
+let emptyAliasCWD = ()=>{
+   aliasCWD.splice(0, aliasCWD.length);
+};
+
 module.exports = {
    getDirList: getDirList,
    addFolderToCWD: addFolderToCWD,
    removeFolderFromCWD: removeFolderFromCWD,
    getCWD: getCWD,
    getCWDasArray: getCWDasArray,
-   changeCWD: changeCWD
+   changeCWD: changeCWD,
+   getIndexOfAliasCWD: getIndexOfAliasCWD,
+   getAliasCWD: getAliasCWD,
+   addFolderToAliasCWD: addFolderToAliasCWD,
+   removeFolderFromAliasCWD: removeFolderFromAliasCWD,
+   emptyAliasCWD: emptyAliasCWD
 };
 
 /* SFTP File JSON
