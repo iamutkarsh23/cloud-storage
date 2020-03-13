@@ -1,17 +1,22 @@
 const functions = require('firebase-functions');
 const firebase = require('firebase');
-const admin = require("firebase-admin");
+const sftpManager = require("./sftp-manager-server");
+const sftpHelper = require("./sftp-helper-server");
 const cors = require('cors')({origin: true});
 
 exports.signUp = functions.https.onRequest((request, response) => {
    return cors(request, response, () => {
       firebase.auth().createUserWithEmailAndPassword(request.body.email, request.body.password)
-      .then((reply)=>{
-         response.status(200).send({uid: reply.user.uid});
+      .then(async (reply)=>{
+         let uid = reply.user.uid
+         let sftp = await sftpManager.init();
+         await sftpHelper.makerDirInCurrentCWD(sftp, uid);
+         sftpManager.end();
+         response.status(200).send({uid: uid});
       })
       .catch((error)=>{
          // Handle Errors here.
-         var errorCode = error.code;
+         sftpManager.end();
          response.status(500).send(error.message);
       });
    });
