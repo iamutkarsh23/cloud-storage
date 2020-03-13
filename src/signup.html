@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <title>Hello World!</title>
+    <!-- Core CSS -->
+    <link href="./assets/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="./assets/css/theme.css" rel="stylesheet"/>
+    <!-- Page CSS -->
+    <link href="./assets/css/loginAndSignup.css" rel="stylesheet"/>
+  </head>
+  <body>
+      <div class="wrapper fadeInDown">
+         <div id="formContent">
+           <!-- Tabs Titles -->
+       
+           <!-- Icon -->
+           <div class="fadeIn first">
+             <h1>Sign Up</h1>
+           </div>
+       
+           <!-- SignUp Form -->
+           <form id="signUpForm" action="./login.html">
+            <input type="text" id="displayName" class="fadeIn second" name="signup" placeholder="Nick Name" required>
+             <input type="email" id="email" class="fadeIn second" name="signup" placeholder="Email" required>
+             <input type="password" id="password" class="fadeIn third" name="signup" placeholder="Password" required>
+             <input type="submit" id="submitBtn" class="fadeIn fourth" value="Register">
+           </form>
+       
+           <!-- Remind Passowrd -->
+           <div id="formFooter">
+             <a class="underlineHover" href="./login.html">Log In</a>
+           </div>
+       
+         </div>
+       </div>
+  
+    <footer>
+      <a class="tz" href="">Made with LOVE by Dev</a>
+    </footer>
+
+    <!-- Core Js -->
+    <script src="./assets/js/helpers/bootstrap.min.js" type="text/javascript"></script>
+    <!-- Page Js -->
+    <script src="./assets/js/loginAndSignup.js" type="text/javascript"></script>
+  </body>
+</html>
