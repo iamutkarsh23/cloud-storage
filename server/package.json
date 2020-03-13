@@ -1,0 +1,15 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "server for cloud-storage-app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "shrey",
+  "license": "MIT",
+  "dependencies": {
+    "firebase": "^7.11.0",
+    "firebase-tools": "^7.15.0"
+  }
+}
