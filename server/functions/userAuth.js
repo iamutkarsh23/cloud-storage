@@ -12,6 +12,7 @@ exports.signUp = functions.https.onRequest((request, response) => {
          let sftp = await sftpManager.init();
          await sftpHelper.makerDirInCurrentCWD(sftp, uid);
          sftpManager.end();
+         sftpHelper.removeFolderFromCWD();
          response.status(200).send({uid: uid});
       })
       .catch((error)=>{
