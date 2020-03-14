@@ -155,7 +155,7 @@ let renderBreadCrumbs = async()=>{
    
    cwdArray = sftpHelper.getCWDasArray();
 
-   breadCrumbsHTML = breadCrumbsHTML.concat('<a class="breadCrumbsClick" name="'+cwdArray[0]+'"><span class="folderName">'+cwdArray[0]+'</span></a>');
+   breadCrumbsHTML = breadCrumbsHTML.concat('<a class="breadCrumbsClick" name="'+cwdArray[0]+'"><span class="folderName">'+localStorage.getItem("DISPLAY_NAME")+'</span></a>');
    if(cwdArray.length > 1) {
       cwdArray.forEach((folderName, i) =>{
          if(i != 0){
@@ -192,10 +192,24 @@ let renderSearchResult = async(searchResult)=>{
    })
 };
 
+function getUrlVars() {
+   var vars = {};
+   var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+       vars[key] = value;
+   });
+   return vars;
+}
+
 $(async ()=>{
-   let rootDir = 'Server';
-   let dirList = await sftpHelper.getDirList('./'+rootDir);
-   sftpHelper.addFolderToCWD(rootDir);
+   let uid = getUrlVars()["uid"];
+   let displayName = getUrlVars()["displayname"];
+   //setting env consts
+   localStorage.setItem("UID", uid);
+   localStorage.setItem("DISPLAY_NAME", displayName);
+   //setup page
+   let rootDir = "./"+uid;
+   let dirList = await sftpHelper.getDirList(rootDir);
+   sftpHelper.addFolderToCWD(uid);
    await renderDirectories(dirList);
    await activateFolderClick();
    renderBreadCrumbs();

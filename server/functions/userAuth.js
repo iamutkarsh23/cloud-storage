@@ -36,3 +36,20 @@ exports.signUp = functions.https.onRequest((request, response) => {
       });
    });
 });
+
+exports.logIn = functions.https.onRequest((request, response) => {
+   return cors(request, response, () => {
+      firebase.auth().signInWithEmailAndPassword(request.body.email, request.body.password)
+      .then((reply)=>{
+         let json = {
+            uid: reply.user.uid,
+            displayName: reply.user.displayName
+         }
+         response.status(200).send(json);
+      })
+      .catch((error)=>{
+         // Handle Errors here.
+         response.status(401).send(error.message);
+      });
+   });
+});

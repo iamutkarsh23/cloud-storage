@@ -4,7 +4,13 @@ let cwd = [];
 let aliasCWD = [];
 
 let getDirList = (path)=>{
-   return remote.getGlobal('SFTP').list(path);
+   let pathArray = path.split("/");
+   pathArray.splice(0, 1);
+   let searchDir = "./Server"
+   pathArray.forEach((folderName)=>{
+      searchDir = searchDir.concat("/", folderName);
+   })
+   return remote.getGlobal('SFTP').list(searchDir);
 };
 
 let addFolderToCWD = (folderName)=>{
@@ -30,7 +36,7 @@ let getCWDasArray = ()=>{
 let changeCWD = (newCWD)=>{
    let newCWDToArray = newCWD.split('/');
    newCWDToArray.splice(0, 1);
-   cwd = newCWDToArray;
+   cwd = newCWDToArray.map((x)=>x);
 };
 
 let getIndexOfAliasCWD = ()=>{
