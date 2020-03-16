@@ -15,6 +15,7 @@ let activateFolderClick = async () => {
       let newDirList = await sftpHelper.getDirList($(e.currentTarget).attr("title"));
       await renderDirectories(newDirList);
       renderBreadCrumbs();
+      activateRightClicks();
       fileList.addClass("animated");
    });
 }
@@ -33,6 +34,7 @@ let activateBreadCrumbsClick = ()=>{
       let newDirList = await sftpHelper.getDirList(path);
       await renderDirectories(newDirList);
       renderBreadCrumbs();
+      activateRightClicks();
       fileList.addClass("animated");
    });
 };
@@ -65,7 +67,8 @@ let activateFind = ()=>{
 			else {
             fileList.show();
             filemanager.find('.nothingfound').hide();
-            renderSearchResult(searchResult);
+            await renderSearchResult(searchResult);
+            activateRightClicks();
 			}
       } else {
          fileList.removeClass('animated');
@@ -74,6 +77,7 @@ let activateFind = ()=>{
          let cwd = sftpHelper.getCWD();
          let dirList = await sftpHelper.getDirList(cwd);
          await renderDirectories(dirList);
+         activateRightClicks();
          fileList.addClass('animated');
       }
    }).on('keyup', function(e){
