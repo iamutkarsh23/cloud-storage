@@ -51,7 +51,7 @@ let activateFind = ()=>{
    // We are using the "input" event which detects cut and paste
    // in addition to keyboard input.
    
-   filemanager.find('input').on('input', async(e)=>{
+   filemanager.find('#search-box').on('input', async(e)=>{
       let indexOfAliasCWD, aliasCWD;
       var phrase = e.currentTarget.value.trim().toLowerCase();
       if(phrase.length) {
@@ -76,6 +76,8 @@ let activateFind = ()=>{
          sftpHelper.emptyAliasCWD();
          let cwd = sftpHelper.getCWD();
          let dirList = await sftpHelper.getDirList(cwd);
+         filemanager.find('.nothingfound').hide();
+         fileList.show();
          await renderDirectories(dirList);
          activateRightClicks();
          fileList.addClass('animated');
