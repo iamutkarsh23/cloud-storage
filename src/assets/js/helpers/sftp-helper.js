@@ -1,16 +1,22 @@
-let remote = require("electron").remote;
+const remote = require("electron").remote;
+const fs = require('fs');
 
 let cwd = [];
 let aliasCWD = [];
 
-let getDirList = (path)=>{
+let getActualCWD = (path)=>{
    let pathArray = path.split("/");
    pathArray.splice(0, 1);
-   let searchDir = "./Server"
+   let actualPath = "./Server"
    pathArray.forEach((folderName)=>{
-      searchDir = searchDir.concat("/", folderName);
-   })
-   return remote.getGlobal('SFTP').list(searchDir);
+      actualPath = actualPath.concat("/", folderName);
+   });
+   return actualPath;
+};
+
+let getDirList = (path)=>{
+   path = getActualCWD(path);
+   return remote.getGlobal('SFTP').list(path);
 };
 
 let addFolderToCWD = (folderName)=>{
@@ -65,6 +71,18 @@ let emptyAliasCWD = ()=>{
    aliasCWD.splice(0, aliasCWD.length);
 };
 
+let uploadFile = async (localPath, remotePath)=>{
+   // let localData = fs.createReadStream(localPath);
+   remotePath = getActualCWD(remotePath);
+   let response = await remote.getGlobal('SFTP').fastPut(localPath, remotePath,{
+      flags: 'w',  // w - write and a - append
+      encoding: null, // use null for binary files
+      mode: 0o666, // mode to use for created file (rwx)
+      autoClose: true // automatically close the write stream when finished
+    });
+   return response;
+}
+
 module.exports = {
    getDirList: getDirList,
    addFolderToCWD: addFolderToCWD,
@@ -76,7 +94,8 @@ module.exports = {
    getAliasCWD: getAliasCWD,
    addFolderToAliasCWD: addFolderToAliasCWD,
    removeFolderFromAliasCWD: removeFolderFromAliasCWD,
-   emptyAliasCWD: emptyAliasCWD
+   emptyAliasCWD: emptyAliasCWD,
+   uploadFile: uploadFile
 };
 
 /* SFTP File JSON

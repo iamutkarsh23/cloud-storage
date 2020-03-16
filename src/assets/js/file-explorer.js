@@ -251,6 +251,34 @@ $("#items > li").click(function(){
    console.log("You have selected "+$(this).text());
 });
 
+let dropHandler = async(ev)=>{
+   // Prevent default behavior (Prevent file from being opened)
+   ev.preventDefault();
+ 
+   if (ev.dataTransfer.items) {
+     // Use DataTransferItemList interface to access the file(s)
+      await asyncForEach(ev.dataTransfer.items, async (item, index) => {
+         // If dropped items aren't files, reject them
+         if (item.kind === 'file') {
+            var file = item.getAsFile();
+            await sftpHelper.uploadFile(file.path, sftpHelper.getCWD().concat('/', file.name));
+            let path = sftpHelper.getCWD();
+            fileList.empty();
+            fileList.removeClass('animated');
+            let newDirList = await sftpHelper.getDirList(path);
+            await renderDirectories(newDirList);
+            renderBreadCrumbs();
+            activateRightClicks();
+         }
+      });
+   }
+ }
+
+function dragOverHandler(ev) {
+   // Prevent default behavior (Prevent file from being opened)
+   ev.preventDefault();
+}
+
 $(async ()=>{
    let uid = getUrlVars()["uid"];
    let displayName = getUrlVars()["displayname"];
