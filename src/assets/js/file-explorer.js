@@ -200,6 +200,51 @@ function getUrlVars() {
    return vars;
 }
 
+function activateRightClicks() {
+   $(document).bind("contextmenu",function(e){
+      e.preventDefault();
+      if(e.target.tagName == "HTML") {
+         $("#files-right-click-menu").hide();
+         $("#folders-right-click-menu").hide();
+         $("#general-right-click-menu").css("left",e.pageX);
+         $("#general-right-click-menu").css("top",e.pageY);
+         // $("#general-right-click-menu").hide(100);        
+         $("#general-right-click-menu").fadeIn(200,startFocusOut());      
+      }
+   });
+
+   $("a.files").bind("contextmenu",function(e){
+      $("#general-right-click-menu").hide();
+      $("#folders-right-click-menu").hide();
+      $("#files-right-click-menu").css("left",e.pageX);
+      $("#files-right-click-menu").css("top",e.pageY);
+      $("#files-right-click-menu").fadeIn(200,startFocusOut()); 
+   });
+   
+   $("a.folders").bind("contextmenu",function(e){
+      $("#general-right-click-menu").hide();
+      $("#files-right-click-menu").hide();
+      $("#folders-right-click-menu").css("left",e.pageX);
+      $("#folders-right-click-menu").css("top",e.pageY);
+      $("#folders-right-click-menu").fadeIn(200,startFocusOut());
+   });
+}
+
+
+ 
+function startFocusOut(){
+   $(document).on("click",function(){
+      $("#general-right-click-menu").hide();
+      $("#files-right-click-menu").hide();
+      $("#folders-right-click-menu").hide();      
+      $(document).off("click");
+   });
+}
+ 
+$("#items > li").click(function(){
+   console.log("You have selected "+$(this).text());
+});
+
 $(async ()=>{
    let uid = getUrlVars()["uid"];
    let displayName = getUrlVars()["displayname"];
@@ -214,5 +259,6 @@ $(async ()=>{
    await activateFolderClick();
    renderBreadCrumbs();
    activateFind();
+   activateRightClicks();
    fileList.addClass("animated");
 });

@@ -556,3 +556,42 @@ footer #tzine-actions iframe{
 @media (max-width: 1024px) {
 	#bsaHolder, footer{ display:none;}
 }
+
+.items{
+	list-style:none;
+	margin:0px;
+	margin-top:4px;
+	padding-left:10px;
+	padding-right:10px;
+	padding-bottom:3px;
+	font-size:17px;
+	color: #333333;
+	
+ }
+ hr { width: 100%; 
+	background-color:#E4E4E4;
+	border-color:#E4E4E4;
+	  color:#E4E4E4;
+ }
+ .cntnr{
+	display:none;
+	position:fixed;
+	z-index: 100;
+	border:1px solid #B2B2B2;
+	width:250px;
+	background:#F9F9F9;
+	box-shadow: 3px 3px 2px #23232E;
+	border-radius:4px;
+ }
+ 
+ li{
+	padding: 3px;
+	padding-left:10px;
+ }
+ 
+ 
+ .items :hover{
+	color: white;
+	background: #23232e;
+	border-radius:2px;
+ }
