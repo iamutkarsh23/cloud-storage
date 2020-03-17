@@ -254,23 +254,31 @@ $("#items > li").click(function(){
 let dropHandler = async(ev)=>{
    // Prevent default behavior (Prevent file from being opened)
    ev.preventDefault();
- 
+   let filesObj = [];
    if (ev.dataTransfer.items) {
      // Use DataTransferItemList interface to access the file(s)
-      await asyncForEach(ev.dataTransfer.items, async (item, index) => {
+      for (var i = 0; i < ev.dataTransfer.items.length; i++) {
          // If dropped items aren't files, reject them
-         if (item.kind === 'file') {
-            var file = item.getAsFile();
-            await sftpHelper.uploadFile(file.path, sftpHelper.getCWD().concat('/', file.name));
-            let path = sftpHelper.getCWD();
-            fileList.empty();
-            fileList.removeClass('animated');
-            let newDirList = await sftpHelper.getDirList(path);
-            await renderDirectories(newDirList);
-            renderBreadCrumbs();
-            activateRightClicks();
+         if (ev.dataTransfer.items[i].kind === 'file') {
+            var file = ev.dataTransfer.items[i].getAsFile();
+            filesObj.push(file);
          }
+      }
+      await asyncForEach(filesObj, async (fileObj, index) => {
+         await sftpHelper.uploadFile(fileObj.path, sftpHelper.getCWD().concat('/', fileObj.name));
       });
+      let path = sftpHelper.getCWD();
+      fileList.empty();
+      fileList.removeClass('animated');
+      let newDirList = await sftpHelper.getDirList(path);
+      await renderDirectories(newDirList);
+      renderBreadCrumbs();
+      activateRightClicks();
+   } else {
+     // Use DataTransfer interface to access the file(s)
+     for (var i = 0; i < ev.dataTransfer.files.length; i++) {
+       console.log(ev.dataTransfer.files[i].location);
+     }
    }
  }
 
