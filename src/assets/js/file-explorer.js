@@ -209,12 +209,11 @@ function getUrlVars() {
 function activateRightClicks() {
    $(document).bind("contextmenu",function(e){
       e.preventDefault();
-      if(e.target.tagName == "HTML") {
+      if(e.target.tagName == "HTML" || e.target.tagName == "BODY" || e.target.tagName == "UL") {
          $("#files-right-click-menu").hide();
          $("#folders-right-click-menu").hide();
          $("#general-right-click-menu").css("left",e.pageX);
-         $("#general-right-click-menu").css("top",e.pageY);
-         // $("#general-right-click-menu").hide(100);        
+         $("#general-right-click-menu").css("top",e.pageY);       
          $("#general-right-click-menu").fadeIn(200,startFocusOut());      
       }
    });
@@ -246,9 +245,38 @@ function startFocusOut(){
       $(document).off("click");
    });
 }
- 
-$("#items > li").click(function(){
-   console.log("You have selected "+$(this).text());
+
+let handleFileSelect = async (e)=>{
+   let files = e.target.files;
+   if (files.length < 1) {
+       alert('select a file...');
+       return;
+   }
+   let filesObj = [];
+   for(let i=0; i<files.length; i++){
+      filesObj.push(files[i]);
+   }
+   await asyncForEach(filesObj, async (fileObj, index) => {
+      await sftpHelper.uploadFile(fileObj.path, sftpHelper.getCWD().concat('/', fileObj.name));
+   });
+   let path = sftpHelper.getCWD();
+   fileList.empty();
+   fileList.removeClass('animated');
+   let newDirList = await sftpHelper.getDirList(path);
+   await renderDirectories(newDirList);
+   renderBreadCrumbs();
+   activateRightClicks();
+}
+
+$("#general-right-click-menu > .items > li").click(function(){
+   switch($(this).attr("id")) {
+      case "upload-files":
+         $('#file-input').click();
+         break;
+      case "upload-folder":
+         //Code
+         break;
+   }
 });
 
 let dropHandler = async(ev)=>{
@@ -275,10 +303,10 @@ let dropHandler = async(ev)=>{
       renderBreadCrumbs();
       activateRightClicks();
    } else {
-     // Use DataTransfer interface to access the file(s)
-     for (var i = 0; i < ev.dataTransfer.files.length; i++) {
-       console.log(ev.dataTransfer.files[i].location);
-     }
+      // Use DataTransfer interface to access the file(s)
+      for (var i = 0; i < ev.dataTransfer.files.length; i++) {
+         console.log(ev.dataTransfer.files[i].location);
+      }
    }
  }
 
@@ -290,9 +318,11 @@ function dragOverHandler(ev) {
 $(async ()=>{
    let uid = getUrlVars()["uid"];
    let displayName = getUrlVars()["displayname"];
+   
    //setting env consts
    localStorage.setItem("UID", uid);
    localStorage.setItem("DISPLAY_NAME", displayName);
+
    //setup page
    let rootDir = "./"+uid;
    let dirList = await sftpHelper.getDirList(rootDir);
@@ -303,4 +333,7 @@ $(async ()=>{
    activateFind();
    activateRightClicks();
    fileList.addClass("animated");
+
+   //Assign right click event helpers
+   $('#file-input').change(handleFileSelect);
 });
