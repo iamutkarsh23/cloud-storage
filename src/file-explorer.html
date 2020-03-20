@@ -5,14 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
     <title>Hello World!</title>
+
     <!-- Core CSS -->
-    <link href="./assets/css/theme.css" rel="stylesheet"/>
+    <link href="./assets/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Page CSS -->
+    <link href="./assets/css/theme.css" rel="stylesheet"/>
+  
   </head>
   <body>
     <div class="theme filemanager">
 
       <div class="search">
+        <!-- <i id="searchIcon" class="fas fa-search fa-lg" style="color: white;"></i> -->
         <input type="search" id="search-box" placeholder="Find a file.." />
       </div>
   
@@ -80,13 +84,53 @@
       <!-- Right Click Menus End -->
 
       <input type="file" id="file-input" multiple style="display: none;"/>
+      <input type="file" id="folder-input" webkitdirectory directory style="display: none;"/>
+      
+      <!-- Upload Files Confirmation Modal -->
+      <div class="modal fade" id="uploadFileModalConfirmation" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title centerModalTitle" id="exampleModalCenterTitle">Are you sure you want to upload files?</h4>
+            </div>
+            
+            <div class="modal-footer centerModalBtns">
+              <button type="button" class="btn modalBtn btn-danger" data-dismiss="modal">No</button>
+              <button type="button" class="btn modalBtn btn-success" id="uploadFileModalConfirmedBtn" >Yes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Folders Confirmation Modal -->
+      <div class="modal fade" id="uploadFolderModalConfirmation" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title centerModalTitle" id="exampleModalCenterTitle">Are you sure you want to upload a folder?</h4>
+            </div>
+            
+            <div class="modal-footer centerModalBtns">
+              <button type="button" class="btn modalBtn btn-danger" data-dismiss="modal">No</button>
+              <button type="button" class="btn modalBtn btn-success" id="uploadFolderModalConfirmedBtn" >Yes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
     </div>
+
+   
   
     <footer>
       <a class="tz" href="">Made with LOVE by Dev</a>
     </footer>
 
     <!-- Core Js -->
+    <script src="./assets/js/helpers/bootstrap.min.js"></script>
     <!-- Page Js -->
     <script src="./assets/js/file-explorer.js" type="text/javascript"></script>
   </body>

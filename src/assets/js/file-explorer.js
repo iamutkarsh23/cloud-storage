@@ -268,13 +268,43 @@ let handleFileSelect = async (e)=>{
    activateRightClicks();
 }
 
+// not completed 
+// let handleFolderSelect = async (e) => {
+//    console.log(e.target.files);
+//    let localPath = e.target.files[0].path.split("/");
+//    localPath.splice(localPath.length-1);
+//    await sftpHelper.uploadFolder(localPath.join(), sftpHelper.getCWD().concat('/',e.target.files[0].webkitRelativePath.substring(0,e.target.files[0].webkitRelativePath.indexOf('/'))))
+//    let path = sftpHelper.getCWD();
+//    fileList.empty();
+//    fileList.removeClass('animated');
+//    let newDirList = await sftpHelper.getDirList(path);
+//    await renderDirectories(newDirList);
+//    renderBreadCrumbs();
+//    activateRightClicks();
+// }
+
 $("#general-right-click-menu > .items > li").click(function(){
    switch($(this).attr("id")) {
       case "upload-files":
-         $('#file-input').click();
+         var uploadFileModalConfirmation = $("#uploadFileModalConfirmation");
+         uploadFileModalConfirmation.modal('toggle');
+         uploadFileModalConfirmation.on('click', '#uploadFileModalConfirmedBtn', (e)=> {
+            uploadFileModalConfirmation.modal("hide");
+            uploadFileModalConfirmation.on("hidden.bs.modal", ()=> {
+               $('#file-input').click();
+            })
+         })
          break;
       case "upload-folder":
-         //Code
+         // below code should be uncommented when uploading folder functionality is completed 
+         var uploadFolderModalConfirmation = $("#uploadFolderModalConfirmation");
+         uploadFolderModalConfirmation.modal('toggle');
+         uploadFolderModalConfirmation.on('click', '#uploadFolderModalConfirmedBtn', (e)=> {
+            uploadFolderModalConfirmation.modal("hide");
+            uploadFolderModalConfirmation.on("hidden.bs.modal", ()=> {
+               $('#folder-input').click();
+            })
+         })
          break;
    }
 });
@@ -336,4 +366,6 @@ $(async ()=>{
 
    //Assign right click event helpers
    $('#file-input').change(handleFileSelect);
+   // below code should be uncommented when uploading folder functionality is completed 
+   // $("#folder-input").change(handleFolderSelect);
 });

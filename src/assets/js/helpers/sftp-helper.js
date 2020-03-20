@@ -83,6 +83,13 @@ let uploadFile = async (localPath, remotePath)=>{
    return response;
 }
 
+// Not completed fully
+// let uploadFolder = async(localPath, remotePath)=> {
+//    remotePath = getActualCWD(remotePath);
+//    let response = await remote.getGlobal('SFTP').uploadDir(localPath, remotePath);
+//    return response;
+// }
+
 module.exports = {
    getDirList: getDirList,
    addFolderToCWD: addFolderToCWD,
@@ -95,7 +102,8 @@ module.exports = {
    addFolderToAliasCWD: addFolderToAliasCWD,
    removeFolderFromAliasCWD: removeFolderFromAliasCWD,
    emptyAliasCWD: emptyAliasCWD,
-   uploadFile: uploadFile
+   uploadFile: uploadFile,
+   // uploadFolder: uploadFolder
 };
 
 /* SFTP File JSON
