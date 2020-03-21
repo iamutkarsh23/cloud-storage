@@ -59,6 +59,10 @@ Modal
 	text-align: center;
 }
 
+.modal-dialog-centered {
+	top: 40%;
+}
+
 
 /*-------------------------
 	Breadcrumps
