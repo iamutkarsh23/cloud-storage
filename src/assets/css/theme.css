@@ -59,6 +59,14 @@ Modal
 	text-align: center;
 }
 
+.leftModalTitle {
+	text-align: left;
+}
+
+.modal-no-border {
+	border: none !important;
+}
+
 .modal-dialog-centered {
 	top: 40%;
 }

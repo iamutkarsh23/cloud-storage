@@ -269,24 +269,58 @@ let handleFileSelect = async (e)=>{
 }
 
 // not completed 
-// let handleFolderSelect = async (e) => {
-//    console.log(e.target.files);
-//    let localPath = e.target.files[0].path.split("/");
-//    localPath.splice(localPath.length-1);
-//    await sftpHelper.uploadFolder(localPath.join(), sftpHelper.getCWD().concat('/',e.target.files[0].webkitRelativePath.substring(0,e.target.files[0].webkitRelativePath.indexOf('/'))))
-//    let path = sftpHelper.getCWD();
-//    fileList.empty();
-//    fileList.removeClass('animated');
-//    let newDirList = await sftpHelper.getDirList(path);
-//    await renderDirectories(newDirList);
-//    renderBreadCrumbs();
-//    activateRightClicks();
-// }
+let handleFolderSelect = async (e) => {
+   alert("The folder is not uploaded. This functionality will be supported soon!")
+   // console.log("Inside HandleFolderSelect")
+   // console.log(e);
+   // let remotePath = sftpHelper.getCWD().concat('/',e.target.files[0].webkitRelativePath.substring(0,e.target.files[0].webkitRelativePath.indexOf('/')));
+   // console.log(remotePath);
+   // let localPath = e.target.files[0].path.split('\\');
+   // let localPathStr = '';
+   // console.log(localPath);
+   // localPath.splice(localPath.length-1);
+   // localPath.forEach((folderName)=>{
+   //    localPathStr = localPathStr.concat("/", folderName);
+   // });
+   // console.log(localPathStr.substring(1))
+   // await sftpHelper.uploadFolder(localPathStr.substring(1), remotePath);
+   // let path = sftpHelper.getCWD();
+   // fileList.empty();
+   // fileList.removeClass('animated');
+   // let newDirList = await sftpHelper.getDirList(path);
+   // await renderDirectories(newDirList);
+   // renderBreadCrumbs();
+   // activateRightClicks();
+}
+
+// create new folder
+let handleCreateNewFolder = async() => {
+   alert("Not quite done! Tune in for more!")
+   // const folderName = $('#newFolderInput').val();
+   // await sftpHelper.makeDirInCurrentCWD(folderName);
+   // let path = sftpHelper.getCWD();
+   // console.log("PAth: ", path);
+   // fileList.empty();
+   // fileList.removeClass('animated');
+   // let newDirList = await sftpHelper.getDirList(path);
+   // await renderDirectories(newDirList);
+   // renderBreadCrumbs();
+   // activateRightClicks();
+   // $('#newFolderInput').val(' ');
+}
 
 $("#general-right-click-menu > .items > li").click(function(){
    switch($(this).attr("id")) {
+      case "new-folder":
+         const newFolderModal = $("#newFolderModal");
+         newFolderModal.modal('toggle');
+         newFolderModal.on('click', '#createNewFolderBtn', async(e)=>{
+            newFolderModal.modal("hide");
+            await handleCreateNewFolder();
+         })
+         break;
       case "upload-files":
-         var uploadFileModalConfirmation = $("#uploadFileModalConfirmation");
+         const uploadFileModalConfirmation = $("#uploadFileModalConfirmation");
          uploadFileModalConfirmation.modal('toggle');
          uploadFileModalConfirmation.on('click', '#uploadFileModalConfirmedBtn', (e)=> {
             uploadFileModalConfirmation.modal("hide");
@@ -297,14 +331,68 @@ $("#general-right-click-menu > .items > li").click(function(){
          break;
       case "upload-folder":
          // below code should be uncommented when uploading folder functionality is completed 
-         var uploadFolderModalConfirmation = $("#uploadFolderModalConfirmation");
+         const uploadFolderModalConfirmation = $("#uploadFolderModalConfirmation");
          uploadFolderModalConfirmation.modal('toggle');
          uploadFolderModalConfirmation.on('click', '#uploadFolderModalConfirmedBtn', (e)=> {
             uploadFolderModalConfirmation.modal("hide");
-            uploadFolderModalConfirmation.on("hidden.bs.modal", ()=> {
-               $('#folder-input').click();
-            })
+            $('#folder-input').click();
+            // uploadFolderModalConfirmation.on("hidden.bs.modal", ()=> {
+            //    $('#folder-input').click();
+            // })
          })
+         break;
+   }
+});
+
+$("#folders-right-click-menu > .items > li").click(function(){
+   switch($(this).attr("id")) {
+      case "share-file":
+         break;
+      case "get-shareble-link":
+         break;
+      case "move-to":
+         break;
+      case "add-to-starred":
+         break;
+      case "rename":
+         break;
+      case "view-details":
+         break;
+      case "download":
+         break;
+      case "remove":
+         const removeFolderConfirmationModal = $("#removeFolderConfirmationModal");
+         removeFolderConfirmationModal.modal('toggle');
+         removeFolderConfirmationModal.on('click', '#removeFolderConfirmationModalBtn', (e)=> {
+            console.log(e);
+         })
+         break;
+   }
+});
+
+$("#files-right-click-menu > .items > li").click(function(){
+   switch($(this).attr("id")) {
+      case "share-file":
+         break;
+      case "get-shareble-link":
+         break;
+      case "show-file-location":
+         break;
+      case "move-to":
+         break;
+      case "add-to-starred":
+         break;
+      case "rename":
+         break;
+      case "view-details":
+         break;
+      case "download":
+         break;
+      case "manage-versions":
+         break;
+      case "make-a-copy":
+         break;
+      case "remove":
          break;
    }
 });
@@ -367,5 +455,5 @@ $(async ()=>{
    //Assign right click event helpers
    $('#file-input').change(handleFileSelect);
    // below code should be uncommented when uploading folder functionality is completed 
-   // $("#folder-input").change(handleFolderSelect);
+   $("#folder-input").change(handleFolderSelect);
 });
