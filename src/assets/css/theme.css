@@ -41,6 +41,36 @@ body {
 	}
 }
 
+/*------------------------
+Modal 
+-------------------------*/
+
+.modalBtn {
+	border-radius: 40px;
+	border: 0px;
+}
+
+.centerModalBtns {
+	display: flex;
+	justify-content: center;
+}
+
+.centerModalTitle {
+	text-align: center;
+}
+
+.leftModalTitle {
+	text-align: left;
+}
+
+.modal-no-border {
+	border: none !important;
+}
+
+.modal-dialog-centered {
+	top: 40%;
+}
+
 
 /*-------------------------
 	Breadcrumps
@@ -62,6 +92,7 @@ body {
 
 .theme .breadcrumbs a:hover {
 	text-decoration: underline;
+	color: #ffffff;
 }
 
 .theme .breadcrumbs .arrow {
@@ -73,6 +104,7 @@ body {
 
 .breadCrumbsClick {
 	cursor: pointer;
+	color: #ffffff;
 }
 
 
@@ -97,11 +129,11 @@ body {
 	content: '';
 	position: absolute;
 	margin-top:12px;
-	width: 10px;
-	height: 11px;
+	width: 14px;
+	height: 15px;
 	border-radius: 50%;
 	border: 2px solid #ffffff;
-	right: 8px;
+	right: 12px;
 }
 
 .theme .search:after {
@@ -112,7 +144,7 @@ body {
 	border-radius: 2px;
 	position: absolute;
 	top: 23px;
-	right: 6px;
+	right: 10px;
 	-webkit-transform: rotate(-45deg);
 	transform: rotate(-45deg);
 }

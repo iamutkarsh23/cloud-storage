@@ -6,7 +6,7 @@ let initSFTP = ()=>{
    return new Promise(resolve => {
       //Host name for remote: shrey.myvnc.com
       sftp.connect({
-         host: '10.0.0.94',
+         host: 'shrey.myvnc.com',
          port: '2500',
          username: 'dev',
          password: 'Qwerty@1'

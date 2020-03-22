@@ -83,6 +83,45 @@ let uploadFile = async (localPath, remotePath)=>{
    return response;
 }
 
+let uploadFolder = async(localPath, remotePath)=> {
+   remotePath = getActualCWD(remotePath);
+   let response = await remote.getGlobal('SFTP').uploadDir(localPath, remotePath);
+   return response;
+}
+
+let makeDirInCurrentCWD = async (nameOfDir)=>{
+   let folderPath = getActualCWD(getCWD()) + "/" + nameOfDir;
+   let response = await remote.getGlobal('SFTP').mkdir(folderPath, true);
+   console.log(getCWD())
+   console.log(getActualCWD(getCWD()))
+   return response;
+};
+
+let removeDir = async(nameOfDir)=>{
+   let folderPath = getActualCWD(getCWD()) + "/" + nameOfDir;
+   let response = await remote.getGlobal('SFTP').rmdir(folderPath, true);
+   return response;
+}
+
+let removeFile = async(nameOfFile)=>{
+   let filePath = getActualCWD(getCWD()) + "/" + nameOfFile;
+   let response = await remote.getGlobal('SFTP').delete(filePath);
+   return response;
+}
+
+let renameFile = async(oldName, newName)=> {
+   let oldFilePath = getActualCWD(getCWD()) + "/" + oldName;
+   let newFilePath = getActualCWD(getCWD()) + "/" + newName;
+   let response = await remote.getGlobal('SFTP').rename(oldFilePath, newFilePath);
+   return response;
+}
+
+let downloadDir = async(remotePath, localPath) => {
+   remotePath = getActualCWD(remotePath);
+   let response = await remote.getGlobal('SFTP').downloadDir(remotePath, localPath);
+   return response;
+}
+
 module.exports = {
    getDirList: getDirList,
    addFolderToCWD: addFolderToCWD,
@@ -95,7 +134,13 @@ module.exports = {
    addFolderToAliasCWD: addFolderToAliasCWD,
    removeFolderFromAliasCWD: removeFolderFromAliasCWD,
    emptyAliasCWD: emptyAliasCWD,
-   uploadFile: uploadFile
+   uploadFile: uploadFile,
+   uploadFolder: uploadFolder,
+   makeDirInCurrentCWD: makeDirInCurrentCWD,
+   removeDir: removeDir,
+   removeFile: removeFile,
+   renameFile: renameFile,
+   downloadDir: downloadDir,
 };
 
 /* SFTP File JSON
