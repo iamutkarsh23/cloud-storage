@@ -21,17 +21,11 @@ let initSFTP = ()=>{
    });
 }
 
-let getSFTP = ()=>{
-   return sftp;
-}
-
 let closeSFTP = ()=>{
    return sftp.end();
 }
 
 module.exports = {
    init: initSFTP,
-   getSFTP: getSFTP,
-   end: closeSFTP,
-   sftp: sftp
+   end: closeSFTP
 };
