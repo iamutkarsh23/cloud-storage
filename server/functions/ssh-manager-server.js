@@ -1,4 +1,5 @@
 var Client = require('ssh2').Client;
+var env_const = require('./constants');
 
 var conn = new Client();
 
@@ -7,10 +8,10 @@ let initSSH = ()=>{
       conn.on('ready', function() {
          resolve(conn);
       }).connect({
-         host: '10.0.0.94',
-         port: 2500,
-         username: 'dev',
-         password: 'Qwerty@1'
+         host: env_const.DOMAIN,
+         port: env_const.DOMAIN_PORT,
+         username: env_const.DOMAIN_USER,
+         password: env_const.DOMAIN_PASSWORD
       });
    });
 };

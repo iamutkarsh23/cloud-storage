@@ -1,6 +1,8 @@
+let env_const = require("./constants");
+
 let copyFile = (ssh, srcPath, destPath)=>{
    return new Promise((resolve, reject) => {
-      var cmd = "echo Qwerty@1 | sudo -S cp -f " + srcPath + " " + destPath;
+      var cmd = "echo " + env_const.DOMAIN_PASSWORD + " | sudo -S cp -f " + srcPath + " " + destPath;
       ssh.exec(cmd, function(err, stream) {
          if (err){reject();}
          stream.on('close', function(code, signal) {
