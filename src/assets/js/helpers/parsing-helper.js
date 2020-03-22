@@ -54,7 +54,7 @@ let getFileHTML = (file, filePath, addFileNameToPath)=>{
    fileType = fileType[fileType.length-1];
 
    icon = '<span class="icon file f-'+fileType+'">.'+fileType+'</span>';
-   const fileHTML = '<li class="files"><a href="'+ path+'" title="'+ path +'" class="files">'+icon+'<span class="name">'+ name +'</span> <span class="details">'+fileSize+'</span></a></li>';
+   const fileHTML = '<li class="files"><a href="'+ path+'" name="'+ name +'"title="'+ path +'" class="files">'+icon+'<span class="name">'+ name +'</span> <span class="details">'+fileSize+'</span></a></li>';
    return fileHTML;
 };
 

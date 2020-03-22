@@ -141,10 +141,13 @@ let searchHelper = async(dirList, phrase, indexOfAliasCWD)=> {
                });
             }
          }
-         if(index == dirList.length-1){
-            sftpHelper.removeFolderFromAliasCWD(indexOfAliasCWD);
-         }
+         // if(index == dirList.length-1){
+         //    sftpHelper.removeFolderFromAliasCWD(indexOfAliasCWD);
+         // }
       })
+      
+      sftpHelper.removeFolderFromAliasCWD(indexOfAliasCWD);
+      
       
       
       let temp = sftpHelper.getCWD();
@@ -221,6 +224,13 @@ function activateRightClicks() {
    $("a.files").bind("contextmenu",function(e){
       $("#general-right-click-menu").hide();
       $("#folders-right-click-menu").hide();
+      let fileName;  
+      if(e.target.tagName === "A"){
+         fileName = e.target.name;
+      } else {
+         fileName = $($(e.target).parent()).attr('name');
+      }
+      $("#files-right-click-menu").attr("filename", fileName);
       $("#files-right-click-menu").css("left",e.pageX);
       $("#files-right-click-menu").css("top",e.pageY);
       $("#files-right-click-menu").fadeIn(200,startFocusOut()); 
@@ -229,14 +239,19 @@ function activateRightClicks() {
    $("a.folders").bind("contextmenu",function(e){
       $("#general-right-click-menu").hide();
       $("#files-right-click-menu").hide();
+      let folderName;  
+      if(e.target.tagName === "A"){
+         folderName = e.target.name;
+      } else {
+         folderName = $($(e.target).parent()).attr('name');
+      }
+      $("#folders-right-click-menu").attr("foldername", folderName);
       $("#folders-right-click-menu").css("left",e.pageX);
       $("#folders-right-click-menu").css("top",e.pageY);
       $("#folders-right-click-menu").fadeIn(200,startFocusOut());
    });
 }
 
-
- 
 function startFocusOut(){
    $(document).on("click",function(){
       $("#general-right-click-menu").hide();
@@ -244,6 +259,30 @@ function startFocusOut(){
       $("#folders-right-click-menu").hide();      
       $(document).off("click");
    });
+}
+
+let modalHandlers = ()=> {
+
+   $("#newFolderModal").on('click', '#createNewFolderBtn', async(e)=>{
+      $("#newFolderModal").modal("hide");
+      await handleCreateNewFolder();
+   })
+
+   $("#uploadFileModalConfirmation").on('click', '#uploadFileModalConfirmedBtn', (e)=> {
+      $("#uploadFileModalConfirmation").modal("hide");
+      $('#file-input').click();
+   })
+
+   $("#uploadFolderModalConfirmation").on('click', '#uploadFolderModalConfirmedBtn', (e)=> {
+      $("#uploadFolderModalConfirmation").modal("hide");
+      $('#folder-input').click();
+   })
+
+   $("#removeFolderConfirmationModal").on('click', '#removeFolderConfirmationModalBtn', async(e)=> {
+      $("#removeFolderConfirmationModal").modal("hide");
+      await handleRemoveFolder();
+   })
+
 }
 
 let handleFileSelect = async (e)=>{
@@ -293,56 +332,46 @@ let handleFolderSelect = async (e) => {
    // activateRightClicks();
 }
 
-// create new folder
 let handleCreateNewFolder = async() => {
-   alert("Not quite done! Tune in for more!")
-   // const folderName = $('#newFolderInput').val();
-   // await sftpHelper.makeDirInCurrentCWD(folderName);
-   // let path = sftpHelper.getCWD();
-   // console.log("PAth: ", path);
-   // fileList.empty();
-   // fileList.removeClass('animated');
-   // let newDirList = await sftpHelper.getDirList(path);
-   // await renderDirectories(newDirList);
-   // renderBreadCrumbs();
-   // activateRightClicks();
-   // $('#newFolderInput').val(' ');
+   const folderName = $('#newFolderInput').val();
+   await sftpHelper.makeDirInCurrentCWD(folderName);
+   let path = sftpHelper.getCWD();
+   fileList.empty();
+   fileList.removeClass('animated');
+   let newDirList = await sftpHelper.getDirList(path);
+   await renderDirectories(newDirList);
+   renderBreadCrumbs();
+   activateRightClicks();
+   $('#newFolderInput').val(' ');
+}
+
+let handleRemoveFolder = async() => {
+   const folderName = $("#folders-right-click-menu").attr("foldername");
+   await sftpHelper.removeDir(folderName);
+   let path = sftpHelper.getCWD();
+   fileList.empty();
+   fileList.removeClass('animated');
+   let newDirList = await sftpHelper.getDirList(path);
+   await renderDirectories(newDirList);
+   renderBreadCrumbs();
+   activateRightClicks();
 }
 
 $("#general-right-click-menu > .items > li").click(function(){
    switch($(this).attr("id")) {
       case "new-folder":
-         const newFolderModal = $("#newFolderModal");
-         newFolderModal.modal('toggle');
-         newFolderModal.on('click', '#createNewFolderBtn', async(e)=>{
-            newFolderModal.modal("hide");
-            await handleCreateNewFolder();
-         })
+         $("#newFolderModal").modal('toggle');
          break;
       case "upload-files":
-         const uploadFileModalConfirmation = $("#uploadFileModalConfirmation");
-         uploadFileModalConfirmation.modal('toggle');
-         uploadFileModalConfirmation.on('click', '#uploadFileModalConfirmedBtn', (e)=> {
-            uploadFileModalConfirmation.modal("hide");
-            uploadFileModalConfirmation.on("hidden.bs.modal", ()=> {
-               $('#file-input').click();
-            })
-         })
+         $("#uploadFileModalConfirmation").modal('toggle');         
          break;
       case "upload-folder":
          // below code should be uncommented when uploading folder functionality is completed 
-         const uploadFolderModalConfirmation = $("#uploadFolderModalConfirmation");
-         uploadFolderModalConfirmation.modal('toggle');
-         uploadFolderModalConfirmation.on('click', '#uploadFolderModalConfirmedBtn', (e)=> {
-            uploadFolderModalConfirmation.modal("hide");
-            $('#folder-input').click();
-            // uploadFolderModalConfirmation.on("hidden.bs.modal", ()=> {
-            //    $('#folder-input').click();
-            // })
-         })
+         $("#uploadFolderModalConfirmation").modal('toggle');
          break;
    }
 });
+
 
 $("#folders-right-click-menu > .items > li").click(function(){
    switch($(this).attr("id")) {
@@ -361,11 +390,8 @@ $("#folders-right-click-menu > .items > li").click(function(){
       case "download":
          break;
       case "remove":
-         const removeFolderConfirmationModal = $("#removeFolderConfirmationModal");
-         removeFolderConfirmationModal.modal('toggle');
-         removeFolderConfirmationModal.on('click', '#removeFolderConfirmationModalBtn', (e)=> {
-            console.log(e);
-         })
+         $("#removeFolderConfirmationModal").modal('toggle');
+         
          break;
    }
 });
@@ -450,6 +476,7 @@ $(async ()=>{
    renderBreadCrumbs();
    activateFind();
    activateRightClicks();
+   modalHandlers();
    fileList.addClass("animated");
 
    //Assign right click event helpers
