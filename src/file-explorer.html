@@ -132,7 +132,7 @@
 
             <div class="modal-body">
               <form>
-                <div class="form-group">
+                <div class="form-group" id="newFolderInputForm">
                   <input type="text" class="form-control" id="newFolderInput"> 
                 </div>
               </form>
@@ -179,21 +179,91 @@
       </div>
 
       <!-- Get Shareable Link Modal -->
-      <!-- <div class="modal fade" id="removeFileConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+      <div class="modal fade" id="getShareableLinkModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title centerModalTitle" id="removeFileNameConfirmation">Are you sure you want to remove this file?</h4>
+          <div class="modal-content" style="">
+            <div class="row">
+              <div class="modal-header modal-no-border">
+                <h4 class="modal-title col-md-11 leftModalTitle" id="">Link Sharing</h4>
+                <button type="button" class="close col-md-1 ml-auto" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
             </div>
-            
-            <div class="modal-footer centerModalBtns">
-              <button type="button" class="btn modalBtn btn-danger" data-dismiss="modal">No</button>
-              <button type="button" class="btn modalBtn btn-success" id="removeFileConfirmationModalBtn" >Yes</button>
+
+            <div class="modal-body">
+              <div class="row">
+                <p class="col-md-10 no-margin">Anyone with the following link can view</p>
+                <label class="col-md-2 switch">
+                  <input type="checkbox" checked>
+                  <span class="slider round"></span>
+                </label>
+              </div>
+              
+              <a href="https://pmcvariety.files.wordpress.com/2020/02/friends.jpg?w=1000" id="shareableLink" ><p>https://pmcvariety.files.wordpress.com/2020/02/friends.jpg?w=1000</p></a>
             </div>
           </div>
         </div>
-      </div> -->
+      </div>
 
+      <!-- Rename File Modal -->
+      <div class="modal fade" id="renameFileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="row">
+              <div class="modal-header modal-no-border">
+                <h4 class="modal-title col-md-11 leftModalTitle" id="renameFileHeading">Rename File</h4>
+                <button type="button" class="close col-md-1 ml-auto" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="modal-body">
+              <form>
+                <div class="form-group" id="renameFileInputForm">
+                  <input type="text" class="form-control" id="renameFileInput"> 
+                  
+                </div>
+              </form>
+            </div>
+            
+            <div class="modal-footer modal-no-border">
+              <button type="button" class="btn modalBtn btn-danger" data-dismiss="modal" style="margin-right: 2px;">Cancel</button>
+              <button type="button" class="btn modalBtn btn-success" id="renameFileModalBtn" >Rename</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rename Folder Modal -->
+      <div class="modal fade" id="renameFolderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="row">
+              <div class="modal-header modal-no-border">
+                <h4 class="modal-title col-md-11 leftModalTitle" id="renameFolderHeading">Rename Folder</h4>
+                <button type="button" class="close col-md-1 ml-auto" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="modal-body">
+              <form>
+                <div class="form-group" id="renameFolderInputForm">
+                  <input type="text" class="form-control" id="renameFolderInput"> 
+                </div>
+              </form>
+            </div>
+            
+            <div class="modal-footer modal-no-border">
+              <button type="button" class="btn modalBtn btn-danger" data-dismiss="modal" style="margin-right: 2px;">Cancel</button>
+              <button type="button" class="btn modalBtn btn-success" id="renameFolderModalBtn" >Rename</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
 
 

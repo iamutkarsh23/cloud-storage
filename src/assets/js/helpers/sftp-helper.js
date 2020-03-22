@@ -109,7 +109,7 @@ let removeFile = async(nameOfFile)=>{
    return response;
 }
 
-let renameFile = async(oldName, newName)=> {
+let renameDirOrFile = async(oldName, newName)=> {
    let oldFilePath = getActualCWD(getCWD()) + "/" + oldName;
    let newFilePath = getActualCWD(getCWD()) + "/" + newName;
    let response = await remote.getGlobal('SFTP').rename(oldFilePath, newFilePath);
@@ -139,7 +139,7 @@ module.exports = {
    makeDirInCurrentCWD: makeDirInCurrentCWD,
    removeDir: removeDir,
    removeFile: removeFile,
-   renameFile: renameFile,
+   renameDirOrFile: renameDirOrFile,
    downloadDir: downloadDir,
 };
 
