@@ -54,65 +54,48 @@ body {
 		Toggle Switch
 -------------------------*/
 
-.switch {
-	position: relative;
-	display: inline-block;
-	width: 60px;
-	height: 34px;
-  }
-  
-  .switch input { 
-	opacity: 0;
-	width: 0;
+input[type=checkbox]{
 	height: 0;
-  }
-  
-  .slider {
-	position: absolute;
+	width: 0;
+	visibility: hidden;
+}
+
+.switchLabel {
 	cursor: pointer;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: #ccc;
-	-webkit-transition: .4s;
-	transition: .4s;
-  }
-  
-  .slider:before {
+	text-indent: -9999px;
+	width: 200px;
+	height: 100px;
+	background: grey;
+	display: block;
+	border-radius: 100px;
+	position: relative;
+}
+
+.switchLabel:after {
+	content: '';
 	position: absolute;
-	content: "";
-	height: 26px;
-	width: 26px;
-	left: 4px;
-	bottom: 4px;
-	background-color: white;
-	-webkit-transition: .4s;
-	transition: .4s;
-  }
-  
-  input:checked + .slider {
-	background-color: #2196F3;
-  }
-  
-  input:focus + .slider {
-	box-shadow: 0 0 1px #2196F3;
-  }
-  
-  input:checked + .slider:before {
-	-webkit-transform: translateX(26px);
-	-ms-transform: translateX(26px);
-	transform: translateX(26px);
-  }
-  
-  /* Rounded sliders */
-  .slider.round {
-	border-radius: 34px;
-  }
-  
-  .slider.round:before {
-	border-radius: 50%;
-  }
+	top: 5px;
+	left: 5px;
+	width: 90px;
+	height: 90px;
+	background: #fff;
+	border-radius: 90px;
+	transition: 0.3s;
+}
+
+input:checked + .switchLabel {
+	background: #23232e;
+}
+
+input:checked + .switchLabel:after {
+	left: calc(100% - 5px);
+	transform: translateX(-100%);
+}
+
+.switchLabel:active:after {
+	width: 130px;
+}
+
 
 /*------------------------
 		Modal 

@@ -4,5 +4,5 @@ const fileSharing = require('./fileSharing');
 
 exports.signUp = userAuth.signUp;
 exports.logIn = userAuth.logIn;
-exports.getSharingLinkForFile = fileSharing.getSharingLinkForFile;
-
+exports.getShareableLinkForFile = fileSharing.getShareableLinkForFile;
+exports.makeShareableLinkForFile = fileSharing.makeShareableLinkForFile;

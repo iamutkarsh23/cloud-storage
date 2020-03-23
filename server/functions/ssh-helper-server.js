@@ -2,7 +2,7 @@ let env_const = require("./constants");
 
 let copyFile = (ssh, srcPath, destPath)=>{
    return new Promise((resolve, reject) => {
-      var cmd = "echo " + env_const.DOMAIN_PASSWORD + " | sudo -S cp -f " + srcPath + " " + destPath;
+      var cmd = "echo " + env_const.DOMAIN_PASSWORD + " | sudo -S cp -f '" + srcPath + "' '" + destPath  + "'";
       ssh.exec(cmd, function(err, stream) {
          if (err){reject();}
          stream.on('close', function(code, signal) {
@@ -43,7 +43,7 @@ let insertExtraInfoToFile = (ssh, filePath, attrName, attrValue)=>{
    });
 };
 
-let getExtraInfoToFile = (ssh, filePath, attrName)=>{
+let getExtraInfoOfFile = (ssh, filePath, attrName)=>{
    return new Promise((resolve, reject) => {
       if(attrName.indexOf(" ") > 0) {reject("attrName cannot have space")}
       var cmd = "xattr -p user." + attrName + " '" + filePath + "'";
@@ -68,5 +68,5 @@ let getExtraInfoToFile = (ssh, filePath, attrName)=>{
 module.exports = {
    copyFile: copyFile,
    insertExtraInfoToFile: insertExtraInfoToFile,
-   getExtraInfoToFile: getExtraInfoToFile
+   getExtraInfoOfFile: getExtraInfoOfFile
 };

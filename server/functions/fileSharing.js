@@ -35,7 +35,23 @@ let getFileExtensionFromSrcPath = (srcPath)=>{
    return fileExt;
 };
 
-exports.getSharingLinkForFile = functions.https.onRequest((request, response) => {
+exports.getShareableLinkForFile = functions.https.onRequest((request, response) => {
+   return cors(request, response, async () => {
+      let srcPath = request.body.srcPath;
+      let ssh = await sshManager.init();
+      sshHelper.getExtraInfoOfFile(ssh, srcPath, "shareable_link")
+      .then((data)=>{
+         ssh.end();
+         response.status(200).send({shareable_link: data});
+      })
+      .catch((e)=>{
+         ssh.end();
+         response.status(200).send({shareable_link: null, error: e});
+      });
+   });
+});
+
+exports.makeShareableLinkForFile = functions.https.onRequest((request, response) => {
    return cors(request, response, async () => {
       let srcPath = request.body.srcPath;
       let fileExt = getFileExtensionFromSrcPath(srcPath);
@@ -43,29 +59,22 @@ exports.getSharingLinkForFile = functions.https.onRequest((request, response) =>
       let destPath = getDestPathWithNewFileName(newFileName);
       let sharingPath = getShareLink(newFileName);
       let ssh = await sshManager.init();
-      sshHelper.getExtraInfoToFile(ssh, srcPath, "shareable_link")
-      .then((data)=>{
-         ssh.end();
-         response.status(200).send({shareable_link: data});
-      })
-      .catch((e)=>{
-         sshHelper.copyFile(ssh, srcPath, destPath)
+      sshHelper.copyFile(ssh, srcPath, destPath)
+      .then(()=>{
+         sshHelper.insertExtraInfoToFile(ssh, srcPath, "shareable_link", sharingPath)
          .then(()=>{
-            sshHelper.insertExtraInfoToFile(ssh, srcPath, "shareable_link", sharingPath)
-            .then(()=>{
-               ssh.end();
-               response.status(200).send({shareable_link: sharingPath});
-            })
-            .catch((e)=>{
-               ssh.end();
-               console.log(e);
-               response.status(500).send();
-            });
+            ssh.end();
+            response.status(200).send({shareable_link: sharingPath});
          })
          .catch((e)=>{
             ssh.end();
-            response.status(500).send({error: e});
+            console.log(e);
+            response.status(500).send();
          });
+      })
+      .catch((e)=>{
+         ssh.end();
+         response.status(500).send({error: e});
       });
    });
 });

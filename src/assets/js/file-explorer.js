@@ -341,7 +341,32 @@ let modalHandlers = ()=> {
          }
          $("#renameFolderInput").val($("#folders-right-click-menu").attr("foldername"));
       }
-   })
+   });
+   
+   $("#getShareableLinkModal").on('change', '#shareableLinkStatus', async(e)=>{
+      if ($(e.target).prop("checked")){
+         var fileName = $("#files-right-click-menu").attr("filename");
+         var filePath = sftpHelper.getActualCWD(sftpHelper.getCWD()) + "/" + fileName;
+         $.post("https://us-central1-cloud-storage-app-dev-tech.cloudfunctions.net/makeShareableLinkForFile",
+         {
+            srcPath: filePath
+         },
+         function(data, status){
+            var shareableLink = data.shareable_link;
+            var hasShareableLink = (shareableLink != null) ? true : false;
+            if(hasShareableLink){
+               $("#shareableLinkStatus").prop("checked", true);
+               $("#shareableLink").attr("href", shareableLink);
+               $("#shareableLink > p").html(shareableLink);
+            } else {
+               $("#shareableLinkStatus").prop("checked", false);
+            }  
+         });
+         return;
+      }
+      // not checked
+      return;
+   });
 
 }
 
@@ -463,6 +488,27 @@ let handleMakeFileCopy = async() => {
    // await sftpHelper.uploadFile(oldFilePath, newFilePath);
 }
 
+let handleGetShareableLinkForFile = ()=>{
+   var fileName = $("#files-right-click-menu").attr("filename");
+   var filePath = sftpHelper.getActualCWD(sftpHelper.getCWD()) + "/" + fileName;
+   $.post("https://us-central1-cloud-storage-app-dev-tech.cloudfunctions.net/getShareableLinkForFile",
+   {
+      srcPath: filePath
+   },
+   function(data, status){
+      var shareableLink = data.shareable_link;
+      var hasShareableLink = (shareableLink != null) ? true : false;
+      if(hasShareableLink){
+         $("#shareableLinkStatus").prop("checked", true);
+         $("#shareableLink").attr("href", shareableLink);
+         $("#shareableLink > p").html(shareableLink);
+      } else {
+         $("#shareableLinkStatus").prop("checked", false);
+      }
+      $("#getShareableLinkModal").modal('toggle');
+   });
+}
+
 $("#general-right-click-menu > .items > li").click(function(){
    switch($(this).attr("id")) {
       case "new-folder":
@@ -511,7 +557,7 @@ $("#files-right-click-menu > .items > li").click(function(){
       case "share-file":
          break;
       case "get-shareble-link":
-         $("#getShareableLinkModal").modal('toggle');
+         handleGetShareableLinkForFile()
          break;
       case "show-file-location":
          break;

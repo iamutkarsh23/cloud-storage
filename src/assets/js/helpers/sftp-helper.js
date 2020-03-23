@@ -123,6 +123,7 @@ let downloadDir = async(remotePath, localPath) => {
 }
 
 module.exports = {
+   getActualCWD: getActualCWD,
    getDirList: getDirList,
    addFolderToCWD: addFolderToCWD,
    removeFolderFromCWD: removeFolderFromCWD,
