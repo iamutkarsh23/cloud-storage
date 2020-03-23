@@ -247,13 +247,11 @@ function activateRightClicks() {
       let folderTitle; 
       if(e.target.tagName === "A"){
          folderName = e.target.name;
-         console.log(folderName)
          folderTitle = e.target.title;
       } else {
          folderName = $($(e.target).parent()).attr('name');
          folderTitle = $($(e.target).parent()).attr('title');
       }
-      console.log(folderName)
 
       $("#folders-right-click-menu").attr("foldername", folderName);
       $("#folders-right-click-menu").attr("foldertitle", folderTitle);

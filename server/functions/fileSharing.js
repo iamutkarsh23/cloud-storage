@@ -43,14 +43,29 @@ exports.getSharingLinkForFile = functions.https.onRequest((request, response) =>
       let destPath = getDestPathWithNewFileName(newFileName);
       let sharingPath = getShareLink(newFileName);
       let ssh = await sshManager.init();
-      sshHelper.copyFile(ssh, srcPath, destPath)
-      .then(()=>{
+      sshHelper.getExtraInfoToFile(ssh, srcPath, "shareable_link")
+      .then((data)=>{
          ssh.end();
-         response.status(200).send({sharingPath: sharingPath});
+         response.status(200).send({shareable_link: data});
       })
       .catch((e)=>{
-         ssh.end();
-         response.status(500).send(e);
+         sshHelper.copyFile(ssh, srcPath, destPath)
+         .then(()=>{
+            sshHelper.insertExtraInfoToFile(ssh, srcPath, "shareable_link", sharingPath)
+            .then(()=>{
+               ssh.end();
+               response.status(200).send({shareable_link: sharingPath});
+            })
+            .catch((e)=>{
+               ssh.end();
+               console.log(e);
+               response.status(500).send();
+            });
+         })
+         .catch((e)=>{
+            ssh.end();
+            response.status(500).send({error: e});
+         });
       });
    });
 });
