@@ -184,7 +184,7 @@
           <div class="modal-content">
             <div class="row">
               <div class="modal-header modal-no-border">
-                <h4 class="modal-title col-md-11 leftModalTitle" id="">Link Sharing</h4>
+                <h3 class="modal-title col-md-11 leftModalTitle" id="">Link Sharing</h3>
                 <button type="button" class="close col-md-1 ml-auto" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -193,15 +193,14 @@
 
             <div class="modal-body">
               <div class="row">
-                <p class="col-md-10 no-margin">Anyone with the following link can view</p>
-                <input type="checkbox" id="shareableLinkStatus" /><label class="switchLabel" for="shareableLinkStatus"></label>
-                <!-- <label class="col-md-2 switch">
-                  <input type="checkbox" id="shareableLinkStatus">
-                  <span class="slider round"></span>
-                </label> -->
+                <div class="col-md-8">
+                  <h4 style="margin: 5px 0px 5px 0px;"><small class="text-muted" >Anyone with the following link can view the file. Click the link to copy.</small></h4>
+                </div>
+                <div class="col-md-4">
+                  <input type="checkbox" id="shareableLinkStatus" /><label class="switchLabel" for="shareableLinkStatus" style="float: left;"></label>
+                </div>
               </div>
-              
-              <a href="" id="shareableLink"><p></p></a>
+              <a href="javascript:copyShareableLink();" id="shareableLink"><p id="shareableLinkP" style="margin: 25px 0px 10px 0px;"></p></a>
             </div>
           </div>
         </div>

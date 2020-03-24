@@ -1,6 +1,7 @@
 let $ = require("jquery");
 let sftpHelper = require("./assets/js/helpers/sftp-helper");
 let parsingHelper = require("./assets/js/helpers/parsing-helper");
+const {clipboard} = require('electron');
 
 var   filemanager = $('.filemanager'),
       breadcrumbs = $('.breadcrumbs'),
@@ -344,9 +345,9 @@ let modalHandlers = ()=> {
    });
    
    $("#getShareableLinkModal").on('change', '#shareableLinkStatus', async(e)=>{
+      var fileName = $("#files-right-click-menu").attr("filename");
+      var filePath = sftpHelper.getActualCWD(sftpHelper.getCWD()) + "/" + fileName;
       if ($(e.target).prop("checked")){
-         var fileName = $("#files-right-click-menu").attr("filename");
-         var filePath = sftpHelper.getActualCWD(sftpHelper.getCWD()) + "/" + fileName;
          $.post("https://us-central1-cloud-storage-app-dev-tech.cloudfunctions.net/makeShareableLinkForFile",
          {
             srcPath: filePath
@@ -356,16 +357,43 @@ let modalHandlers = ()=> {
             var hasShareableLink = (shareableLink != null) ? true : false;
             if(hasShareableLink){
                $("#shareableLinkStatus").prop("checked", true);
-               $("#shareableLink").attr("href", shareableLink);
                $("#shareableLink > p").html(shareableLink);
             } else {
                $("#shareableLinkStatus").prop("checked", false);
+               $("#shareableLink").attr("href", '');
+               $("#shareableLink > p").html('');
             }  
          });
-         return;
+      } else {
+         $("#shareableLink").attr("href", '');
+         $("#shareableLink > p").html('');
+         $.post("https://us-central1-cloud-storage-app-dev-tech.cloudfunctions.net/removeShareableLinkForFile",
+         {
+            srcPath: filePath
+         },
+         function(data, status){
+            if(status == 'success'){
+               $("#shareableLinkStatus").prop("checked", false);
+            } else {
+               $.post("https://us-central1-cloud-storage-app-dev-tech.cloudfunctions.net/makeShareableLinkForFile",
+               {
+                  srcPath: filePath
+               },
+               function(data, status){
+                  var shareableLink = data.shareable_link;
+                  var hasShareableLink = (shareableLink != null) ? true : false;
+                  if(hasShareableLink){
+                     $("#shareableLinkStatus").prop("checked", true);
+                     $("#shareableLink > p").html(shareableLink);
+                  } else {
+                     $("#shareableLinkStatus").prop("checked", false);
+                     $("#shareableLink").attr("href", '');
+                     $("#shareableLink > p").html('');
+                  }  
+               });
+            }  
+         });
       }
-      // not checked
-      return;
    });
 
 }
@@ -488,6 +516,11 @@ let handleMakeFileCopy = async() => {
    // await sftpHelper.uploadFile(oldFilePath, newFilePath);
 }
 
+let copyShareableLink = ()=>{
+   var a = $("#shareableLinkP").text();
+   clipboard.writeText(a);
+}
+
 let handleGetShareableLinkForFile = ()=>{
    var fileName = $("#files-right-click-menu").attr("filename");
    var filePath = sftpHelper.getActualCWD(sftpHelper.getCWD()) + "/" + fileName;
@@ -500,10 +533,11 @@ let handleGetShareableLinkForFile = ()=>{
       var hasShareableLink = (shareableLink != null) ? true : false;
       if(hasShareableLink){
          $("#shareableLinkStatus").prop("checked", true);
-         $("#shareableLink").attr("href", shareableLink);
          $("#shareableLink > p").html(shareableLink);
       } else {
          $("#shareableLinkStatus").prop("checked", false);
+         $("#shareableLink").attr("href", '');
+         $("#shareableLink > p").html('');
       }
       $("#getShareableLinkModal").modal('toggle');
    });

@@ -79,6 +79,43 @@ exports.makeShareableLinkForFile = functions.https.onRequest((request, response)
    });
 });
 
+exports.removeShareableLinkForFile = functions.https.onRequest((request, response) => {
+   return cors(request, response, async () => {
+      let srcPath = request.body.srcPath;
+      let ssh = await sshManager.init();
+      sshHelper.getExtraInfoOfFile(ssh, srcPath, 'shareable_link')
+      .then((link)=>{
+         sshHelper.removeExtraInfoOfFile(ssh, srcPath, "shareable_link")
+         .then(()=>{
+            let linkAsArray = link.split("/");
+            let nameOfFile = linkAsArray[linkAsArray.length - 1].toString();
+            nameOfFile = nameOfFile.replace('\n','');
+            let shareableFileSrcPath = '/var/www/html/' + linkAsArray[linkAsArray.length - 2] + '/' + nameOfFile;
+            sshHelper.removeFile(ssh, shareableFileSrcPath)
+            .then(()=>{
+               ssh.end();
+               response.status(200).send();
+            })
+            .catch((e)=>{
+               ssh.end();
+               console.log(e);
+               response.status(500).send();
+            })
+         })
+         .catch((e)=>{
+            ssh.end();
+            console.log(e);
+            response.status(500).send();
+         });
+      })
+      .catch((e)=>{
+         ssh.end();
+         console.log(e);
+         response.status(500).send();
+      });
+   });
+});
+
 /*
 ------------------------------------------------------------------------------------------------------------------
 For File Sharing, we need to create a shared folder in /var/www/html/ named 'shared' using below given permission
