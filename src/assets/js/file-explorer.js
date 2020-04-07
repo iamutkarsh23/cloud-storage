@@ -216,8 +216,8 @@ function activateRightClicks() {
       if(e.target.tagName == "HTML" || e.target.tagName == "BODY" || e.target.tagName == "UL") {
          $("#files-right-click-menu").hide();
          $("#folders-right-click-menu").hide();
-         $("#general-right-click-menu").css("left",e.pageX);
-         $("#general-right-click-menu").css("top",e.pageY);       
+         $("#general-right-click-menu").css("left",e.pageX - e.view.scrollX);
+         $("#general-right-click-menu").css("top",e.pageY - e.view.scrollY);       
          $("#general-right-click-menu").fadeIn(200,startFocusOut());      
       }
    });
@@ -236,8 +236,9 @@ function activateRightClicks() {
       }
       $("#files-right-click-menu").attr("filename", fileName);
       $("#files-right-click-menu").attr("filetitle", fileTitle);
-      $("#files-right-click-menu").css("left",e.pageX);
-      $("#files-right-click-menu").css("top",e.pageY);
+      console.log(e);
+      $("#files-right-click-menu").css("left",e.pageX - e.view.scrollX);
+      $("#files-right-click-menu").css("top",e.pageY - e.view.scrollY);
       $("#files-right-click-menu").fadeIn(200,startFocusOut()); 
    });
    
@@ -256,8 +257,8 @@ function activateRightClicks() {
 
       $("#folders-right-click-menu").attr("foldername", folderName);
       $("#folders-right-click-menu").attr("foldertitle", folderTitle);
-      $("#folders-right-click-menu").css("left",e.pageX);
-      $("#folders-right-click-menu").css("top",e.pageY);
+      $("#folders-right-click-menu").css("left",e.pageX - e.view.scrollX);
+      $("#folders-right-click-menu").css("top",e.pageY - e.view.scrollY);
       $("#folders-right-click-menu").fadeIn(200,startFocusOut());
    });
 }
